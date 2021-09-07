@@ -63,7 +63,7 @@ class Tshark(object):
         :return: Packet JSON object that can be indexed in Elasticsearch
         """
         global closing
-        with subprocess.Popen(command, stdout=subprocess.PIPE, bufsize=0) as proc:
+        with subprocess.Popen(command, stdout=subprocess.PIPE, bufsize=1, text=True) as proc:
             for packet in proc.stdout:
                 packet = self._drop_index_line(packet)
                 if packet is None:
@@ -80,9 +80,9 @@ class Tshark(object):
 
         :return: List of network interfaces
         """
-        with subprocess.Popen(command, stdout=subprocess.PIPE, bufsize=0) as proc:
+        with subprocess.Popen(command, stdout=subprocess.PIPE, bufsize=1, text=True) as proc:
             for interface in proc.stdout:
-                print(interface.decode().rstrip('\n'))
+                print(interface.rstrip('\n'))
 
     def make_command(self, nic, count, bpf, pcap_file, interfaces):
         """ Builds a tshark command to execute.
